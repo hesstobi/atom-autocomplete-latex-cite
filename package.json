@@ -1,0 +1,25 @@
+{
+  "name": "autocomplete-latex-cite",
+  "main": "./lib/main",
+  "version": "0.0.0",
+  "description": "Autocomplete+ Support for Bibtex References in Latex",
+  "keywords": [],
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "repository": "https://github.com/hesstobi/atom-autocomplete-latex-cite",
+  "license": "MIT",
+  "dependencies": {
+    "citation-js": "^0.3.4",
+    "fuse.js": "^3.2.0",
+    "glob": "^7.1.2",
+    "promisify-node": "^0.4.0"
+  },
+  "providedServices": {
+    "autocomplete.provider": {
+      "versions": {
+        "2.0.0": "provide"
+      }
+    }
+  }
+}
