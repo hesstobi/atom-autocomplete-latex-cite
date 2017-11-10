@@ -1,4 +1,4 @@
-# autocomplete-glossaries package
+# autocomplete-latex-cite package
 
 [![Build Status](https://travis-ci.org/hesstobi/atom-autocomplete-latex-cite.svg?branch=master)](https://travis-ci.org/hesstobi/atom-autocomplete-latex-cite)
 [![apm](https://img.shields.io/apm/v/autocomplete-latex-cite.svg)](https://atom.io/packages/autocomplete-latex-cite)
