@@ -14,8 +14,43 @@ describe "Latex Cite Autocompletions", ->
       prefix: prefix
     provider.getSuggestions(request)
 
+  checkSuggestion = (text) ->
+    waitsForPromise ->
+      getCompletions().then (values) ->
+        console.log(provider.manager)
+        expect(values.length).toBeGreaterThan 0
+        expect(values[0].text).toEqual text
+
+
+
   beforeEach ->
     waitsForPromise -> atom.packages.activatePackage('autocomplete-latex-cite')
 
     runs ->
       provider = atom.packages.getActivePackage('autocomplete-latex-cite').mainModule.provide()
+      provider.manager.addBibtexFile bibFile
+
+    atom.project.setPaths([__dirname])
+    waitsForPromise -> atom.workspace.open('test.tex')
+    waitsForPromise -> provider.manager.addBibtexFile bibFile
+    waitsFor -> Object.keys(provider.manager.database).length > 0
+    runs ->
+      editor = atom.workspace.getActiveTextEditor()
+
+  it "returns no completions when not at the start of a tag", ->
+    editor.setText('')
+    expect(getCompletions()).not.toBeDefined()
+
+    editor.setText('d')
+    editor.setCursorBufferPosition([0, 0])
+    expect(getCompletions()).not.toBeDefined()
+    editor.setCursorBufferPosition([0, 1])
+    expect(getCompletions()).not.toBeDefined()
+
+  it "has no completions for prefix without first letter", ->
+    editor.setText('\\cite{')
+    expect(getCompletions()).not.toBeDefined()
+
+  it "has completions for prefix starting with the first letter", ->
+    editor.setText('\\cite{Hess')
+    checkSuggestion('7856203')

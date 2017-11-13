@@ -75,7 +75,7 @@ class CiteManager
     return new Promise((resolve, reject) =>
       fs.readFile(file, 'utf8').then( (content) =>
         content = @replaceEscapeMendeleySequences(content)
-        data = new Cite(content)
+        data = new Cite(content, {'generatedGraph': false, 'forceType': 'string/bibtex'})
 
         data.sort()
         output = data.get
@@ -86,13 +86,14 @@ class CiteManager
         output = output.querySelectorAll('div.csl-entry')
 
         for el,i in data.data
-          el['fullcite'] = output[i]
+          fullcite = output[i].innerHTML.replace(/<\/?i>/g,'*')
+          el['fullcite'] = fullcite
           el['sourcefile'] = file
           delete el['_graph']
-          delete el['_label']
           @database[el['id']] = el
 
         @fuse = new Fuse(Object.values(@database),fuseOptions)
+        console.log(Object.values(@database))
         resolve(@database)
       ).catch( (error) ->
         reject(error)
@@ -100,7 +101,12 @@ class CiteManager
     )
 
   replaceEscapeMendeleySequences: (content) ->
+    # remove comment lines
+    content = content.replace(/[^@{,}=]+\n/g,"")
+
+    # replace backslash
     content = content.replace(/\$\\backslash\$/g,"\\")
+    content = content.replace(/\\textgreater/g,'>')
     return content
 
   searchForPrefixInDatabase: (prefix) ->
