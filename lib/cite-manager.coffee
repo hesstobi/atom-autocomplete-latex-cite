@@ -29,29 +29,47 @@ class CiteManager
   removeBibtexFile: (file) ->
     # Dispose File watcher
     watcher = @pathWachters[file]
-    watcher.dispose()
-    @pathWachters.delete(watcher)
 
-    # Renove file from List
+    unless watcher is undefined
+      watcher.dispose()
+      delete @pathWachters[file]
 
-
-    # Remove Database Entries for File
+      # Remove Database Entries for File
+      for key,value of @database
+        if value.sourcefile is file
+          delete @database[key]
+      @fuse = new Fuse(Object.values(@database),fuseOptions)
 
   addBibtexFile: (file) ->
     # Create a watcher for the file
-    watcherPromise = watchPath file, {}, (events) =>
-      for e in events
-        switch e.action
-          when "modified"
-            @parseBibtexFile(e.path)
-          when "deleted"
-            @removeBibtexFile(e.path)
+    return new Promise( (resolve, reject) =>
 
-    watcherPromise.then (watcher) =>
-      @disposables.add watcher
-      @pathWachters[file] = watcher
+      @parseBibtexFile(file).then( (result) =>
 
-    return Promise.all([@parseBibtexFile(file),watcherPromise])
+        watcherPromise = watchPath file, {}, (events) =>
+          for e in events
+            switch e.action
+              when "modified"
+                @parseBibtexFile(e.path)
+
+        watcherPromise.then (watcher) =>
+          @disposables.add watcher
+          @pathWachters[file] = watcher
+          resolve(@database)
+
+      ).catch( (error) ->
+        message = "Autocomple Latex Cite Warning"
+        options = {
+          'dismissable': true
+          'description': """ Unable to parse Bibtex file #{file}. It will be
+          ignored for autocompletion. (`#{error.message}`)
+          """
+        }
+        atom.notifications.addWarning(message, options)
+        resolve(@database)
+      )
+    )
+
 
   parseBibtexFile: (file) ->
     return new Promise((resolve, reject) =>

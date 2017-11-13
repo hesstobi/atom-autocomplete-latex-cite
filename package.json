@@ -21,5 +21,8 @@
         "2.0.0": "provide"
       }
     }
+  },
+  "devDependencies": {
+    "fs-extra": "^4.0.2"
   }
 }
