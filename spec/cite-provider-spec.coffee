@@ -1,5 +1,8 @@
+path = require 'path'
+
 describe "Latex Cite Autocompletions", ->
   [editor, provider] = []
+  bibFile = path.join(__dirname,'lib.bib')
 
   getCompletions = ->
     cursor = editor.getLastCursor()

@@ -75,25 +75,30 @@ class CiteManager
     return new Promise((resolve, reject) =>
       fs.readFile(file, 'utf8').then( (content) =>
         content = @replaceEscapeMendeleySequences(content)
-        data = new Cite(content, {'generatedGraph': false, 'forceType': 'string/bibtex'})
+        regex = /@[\w\W]+?(?=@|$)/g
 
-        data.sort()
-        output = data.get
-          format: 'real',
-          type: 'html',
-          lang: 'en-US'
-          style: 'citation-apa',
-        output = output.querySelectorAll('div.csl-entry')
+        match = regex.exec content
+        while match
+          data = new Cite(match[0], {'forceType': 'string/bibtex'})
 
-        for el,i in data.data
-          fullcite = output[i].innerHTML.replace(/<\/?i>/g,'*')
-          el['fullcite'] = fullcite
-          el['sourcefile'] = file
-          delete el['_graph']
-          @database[el['id']] = el
+          output = data.get
+            format: 'string',
+            type: 'html',
+            lang: 'en-US'
+            style: 'citation-apa',
+
+          el = data.data[0]
+          if el
+            delete el['_graph']
+            el['fullcite'] = output.replace(/<\/?i>/g,'*')
+            el['sourcefile'] = file
+            @database[el['id']] = el
+          else
+            # get the lable and print an notification with all errors on the File
+
+          match =  regex.exec content
 
         @fuse = new Fuse(Object.values(@database),fuseOptions)
-        console.log(Object.values(@database))
         resolve(@database)
       ).catch( (error) ->
         reject(error)
@@ -101,9 +106,6 @@ class CiteManager
     )
 
   replaceEscapeMendeleySequences: (content) ->
-    # remove comment lines
-    content = content.replace(/[^@{,}=]+\n/g,"")
-
     # replace backslash
     content = content.replace(/\$\\backslash\$/g,"\\")
     content = content.replace(/\\textgreater/g,'>')

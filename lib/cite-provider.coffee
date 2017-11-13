@@ -22,15 +22,14 @@ class CiteProvider
 
   constructor: ->
     @manager = new CiteManager()
-    bibFile = path.join( (atom.config.get 'autocomplete-latex-cite.globalBibtexPath') ,'library.bib')
-    @manager.addBibtexFile(bibFile)
+    #bibFile = path.join( (atom.config.get 'autocomplete-latex-cite.globalBibtexPath') ,'library.bib')
+    #@manager.addBibtexFile(bibFile)
 
   getSuggestions: ({editor, bufferPosition}) ->
     prefix = @getPrefix(editor, bufferPosition)
     return unless prefix?.length
     new Promise (resolve) =>
       results = @manager.searchForPrefixInDatabase(prefix)
-      console.log(results)
       suggestions = []
       for result in results
         suggestion = @suggestionForResult(result, prefix)
