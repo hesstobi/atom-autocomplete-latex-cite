@@ -20,7 +20,6 @@ describe "Latex Cite Autocompletions", ->
   checkSuggestion = (text) ->
     waitsForPromise ->
       getCompletions().then (values) ->
-        console.log(provider.manager)
         expect(values.length).toBeGreaterThan 0
         expect(values[0].text).toEqual text
 

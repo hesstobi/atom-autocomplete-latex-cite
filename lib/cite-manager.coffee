@@ -3,7 +3,10 @@ promisify = require "promisify-node"
 fs = promisify('fs')
 Fuse = require 'fuse.js'
 
+
 Cite = require 'citation-js'
+bibtexParse = require './lite-bibtex-parse'
+referenceTools = require './reference-tools'
 
 module.exports =
 class CiteManager
@@ -14,7 +17,22 @@ class CiteManager
     distance: 100,
     maxPatternLength: 32,
     minMatchCharLength: 1,
-    keys: ["id","author","title"]
+    keys: [{
+        "name": "title",
+        "weight": 0.3
+    },
+    {
+        "name": "author.family",
+        "weight": 0.6
+    },
+    {
+        "name": "author.given",
+        "weight": 0.6
+    },
+    {
+        "name": "id",
+        "weight": 0.1
+    }]
 
 
   constructor: ->
@@ -74,29 +92,14 @@ class CiteManager
   parseBibtexFile: (file) ->
     return new Promise((resolve, reject) =>
       fs.readFile(file, 'utf8').then( (content) =>
-        content = @replaceEscapeMendeleySequences(content)
-        regex = /@[\w\W]+?(?=@|$)/g
 
-        match = regex.exec content
-        while match
-          data = new Cite(match[0], {'forceType': 'string/bibtex'})
+        bibtex = bibtexParse.toJSON(content)
+        bibtex = referenceTools.enhanceReferences(bibtex)
+        console.log(bibtex)
 
-          output = data.get
-            format: 'string',
-            type: 'html',
-            lang: 'en-US'
-            style: 'citation-apa',
-
-          el = data.data[0]
-          if el
-            delete el['_graph']
-            el['fullcite'] = output.replace(/<\/?i>/g,'*')
-            el['sourcefile'] = file
-            @database[el['id']] = el
-          else
-            # get the lable and print an notification with all errors on the File
-
-          match =  regex.exec content
+        for el in bibtex
+          el['sourcefile'] = file
+          @database[el['id']] = el
 
         @fuse = new Fuse(Object.values(@database),fuseOptions)
         resolve(@database)
