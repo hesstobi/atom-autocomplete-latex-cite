@@ -30,11 +30,9 @@ describe "Latex Cite Autocompletions", ->
 
     runs ->
       provider = atom.packages.getActivePackage('autocomplete-latex-cite').mainModule.provide()
-      provider.manager.addBibtexFile bibFile
 
     atom.project.setPaths([__dirname])
     waitsForPromise -> atom.workspace.open('test.tex')
-    waitsForPromise -> provider.manager.addBibtexFile bibFile
     waitsFor -> Object.keys(provider.manager.database).length > 0
     runs ->
       editor = atom.workspace.getActiveTextEditor()

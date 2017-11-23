@@ -22,6 +22,7 @@ class CiteProvider
 
   constructor: ->
     @manager = new CiteManager()
+    @manager.initialize()
     #bibFile = path.join( (atom.config.get 'autocomplete-latex-cite.globalBibtexPath') ,'library.bib')
     #@manager.addBibtexFile(bibFile)
 

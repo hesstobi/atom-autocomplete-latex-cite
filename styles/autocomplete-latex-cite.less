@@ -1,5 +1,28 @@
 @import "ui-variables";
 
+.make-type-icon(@type, @color) {
+   .icon.@{type} {
+      color: @color;
+         background: fadeout(@color, 80%);
+   }
+}
+
+autocomplete-suggestion-list {
+
+  .make-type-icon(book, @syntax-color-attribute);
+  .make-type-icon(chapter, @syntax-color-keyword);
+  .make-type-icon(inproceding, @syntax-color-variable);
+
+  //@syntax-color-method
+  //@syntax-color-snippet
+  //@syntax-color-class
+  //@syntax-color-tag
+}
+
 
 .autocomplete-latex-cite {
+
+
+
+
 }
