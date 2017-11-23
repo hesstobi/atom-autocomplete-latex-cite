@@ -2,9 +2,6 @@
 promisify = require "promisify-node"
 fs = promisify('fs')
 Fuse = require 'fuse.js'
-
-
-Cite = require 'citation-js'
 bibtexParse = require './lite-bibtex-parse'
 referenceTools = require './reference-tools'
 
@@ -95,7 +92,6 @@ class CiteManager
 
         bibtex = bibtexParse.toJSON(content)
         bibtex = referenceTools.enhanceReferences(bibtex)
-        console.log(bibtex)
 
         for el in bibtex
           el['sourcefile'] = file

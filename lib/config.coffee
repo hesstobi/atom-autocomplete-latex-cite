@@ -1,12 +1,19 @@
 { execSync } = require 'child_process'
 path = require 'path'
 
-texmfBibtexPath = undefinded
+texmfBibtexPath = undefined
 
-getTexmfBibtexPath: ->
+getTexmfBibtexPath = ->
   unless texmfBibtexPath?
-    output = execSync('kpsewhich -var-value TEXMFHOME', {encoding: 'utf8'})
-    @texmfBibtexPath = path.join(path.normalize(output.trim()),'bibtex','bib')
+    ENV = null
+    if process.platform == 'darwin'
+      ENV = { PATH: ['/Library/TeX/texbin',process.env.PATH].join(":") }
+    try
+      output = execSync('kpsewhich -var-value TEXMFHOME',
+        { env: ENV, encoding: 'utf8'})
+      texmfBibtexPath = path.join(path.normalize(output.trim()),'bibtex','bib')
+    catch
+      texmfBibtexPath = ''
   return texmfBibtexPath
 
 module.exports =
@@ -16,7 +23,7 @@ module.exports =
     default: getTexmfBibtexPath()
     description: 'The path of for global bibtex libary files. Defaults to the texmf folder.'
   includeGlobalBibFiles:
-    type: 'bool'
+    type: 'boolean'
     order: 1
     default: true
     description: 'Add the bibtex entries in the global files to the suggestions list.'
