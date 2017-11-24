@@ -48,8 +48,15 @@ class CiteManager
 
     # Init the Path watcher
     watcherCallback = (events) =>
-      console.log(events)
+      # Filter for bib files
       events = events.filter (e) -> /bib$/.test(e.path)
+      # Filter multiple events for one file
+      flags = {}
+      events = events.reverse().filter (e) ->
+        if flags[e.path]
+          return false
+        flags[e.path] = true
+        return true
       for e in events
         switch e.action
           when "created"
