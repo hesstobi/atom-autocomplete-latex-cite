@@ -25,5 +25,5 @@ module.exports =
   includeGlobalBibFiles:
     type: 'boolean'
     order: 1
-    default: true
+    default: false
     description: 'Add the bibtex entries in the global files to the suggestions list.'

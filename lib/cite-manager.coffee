@@ -37,7 +37,27 @@ class CiteManager
   constructor: ->
     @disposables = new CompositeDisposable
     @database = {}
+    @globalPathWatcher = undefined
     @fuse = new Fuse(Object.values(@database),fuseOptions)
+
+  handleWatcherEvents: (events) =>
+    # Filter for bib files
+    events = events.filter (e) -> /bib$/.test(e.path)
+    # Filter multiple events for one file
+    flags = {}
+    events = events.reverse().filter (e) ->
+      if flags[e.path]
+        return false
+      flags[e.path] = true
+      return true
+    for e in events
+      switch e.action
+        when "created"
+          @addBibtexFile(e.path)
+        when "modified"
+          @addBibtexFile(e.path)
+        when "deleted"
+          @removeBibtexFile(e.path)
 
   initialize: ->
     # Add Bibfiles to the Database
@@ -47,30 +67,56 @@ class CiteManager
       promises.push(atom.project.getWatcherPromise(ppath))
 
     # Init the Path watcher
-    watcherCallback = (events) =>
-      # Filter for bib files
-      events = events.filter (e) -> /bib$/.test(e.path)
-      # Filter multiple events for one file
-      flags = {}
-      events = events.reverse().filter (e) ->
-        if flags[e.path]
-          return false
-        flags[e.path] = true
-        return true
-      for e in events
-        switch e.action
-          when "created"
-            @addBibtexFile(e.path)
-          when "modified"
-            @addBibtexFile(e.path)
-          when "deleted"
-            @removeBibtexFile(e.path)
-
-
-    watcher =  atom.project.onDidChangeFiles(watcherCallback)
+    watcher =  atom.project.onDidChangeFiles((events) =>
+      @handleWatcherEvents(events))
     @disposables.add watcher
 
+    # handle global Path
+    if atom.config.get('autocomplete-latex-cite.includeGlobalBibFiles')
+      if atom.config.get('autocomplete-latex-cite.globalBibPath')
+        promises.push(@addGlobalBibFiles())
+
+    # Subscripe to events
+    @subscripeForConfigChanges()
+
     return Promise.all(promises)
+
+  subscripeForConfigChanges: () ->
+    atom.config.onDidChange 'autocomplete-latex-cite.includeGlobalBibFiles', ({newValue, oldValue}) =>
+      if newValue
+        if atom.config.get('autocomplete-latex-cite.globalBibPath')
+          @addGlobalBibFiles()
+      else
+        @removeGlobalBibFiles()
+    atom.config.onDidChange 'autocomplete-latex-cite.globalBibPath', ({newValue, oldValue}) =>
+      if newValue
+        if atom.config.get('autocomplete-latex-cite.includeGlobalBibFiles')
+          @removeGlobalBibFiles()
+          @addGlobalBibFiles()
+      else
+        @removeGlobalBibFiles()
+
+  addGlobalBibFiles: () ->
+    return new Promise ( (resolve) =>
+      globalPath = atom.config.get('autocomplete-latex-cite.globalBibPath')
+      @addFilesFromFolder(globalPath).then( (result) =>
+        watchPath(globalPath,{},( (events) =>
+          @handleWatcherEvents(events))).then ( (watcherDisposal) =>
+            @disposables.add watcherDisposal
+            @globalPathWatcher = watcherDisposal
+            resolve(result)
+        )
+      )
+    )
+
+  removeGlobalBibFiles: () ->
+    if @globalPathWatcher
+      files = glob.sync(path.join(@globalPathWatcher.watchedPath, '**/*.bib'))
+      for file in files
+        @removeBibtexFile(file)
+      @globalPathWatcher.dispose()
+      @disposables.remove @globalPathWatcher
+      @globalPathWatcher = undefined
 
   addFilesFromFolder: (folder) ->
     files = glob.sync(path.join(folder, '**/*.bib'))

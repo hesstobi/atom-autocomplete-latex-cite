@@ -82,3 +82,48 @@ describe "When the CiteManger gets initialized", ->
       expect(noti).toHaveLength 1
       expect(noti[0].message).toEqual "Autocomple Latex Cite Warning"
       expect(noti[0].type).toEqual "warning"
+
+  describe "When the global Path is enabled", ->
+    manager = null
+
+    beforeEach ->
+      atom.config.set 'autocomplete-latex-cite.globalBibPath', __dirname
+      atom.config.set 'autocomplete-latex-cite.includeGlobalBibFiles', true
+
+      manager = new CiteManager()
+      waitsForPromise ->
+        manager.initialize()
+
+    it "Add the entries to the database", ->
+      expect(Object.keys(manager.database).length).toEqual(4)
+      expect(manager.database['kundur1994power']['id']).toEqual('kundur1994power')
+
+    it "Removes the entries when the global path is disabled", ->
+      runs ->
+        atom.config.set 'autocomplete-latex-cite.includeGlobalBibFiles', false
+
+      waitsFor ->
+        Object.keys(manager.database).length < 4
+
+      runs ->
+        expect(Object.keys(manager.database).length).toEqual(0)
+
+    it "Changes the entries when the path is changed", ->
+      runs ->
+        atom.config.set 'autocomplete-latex-cite.globalBibPath', path.join(__dirname,'..','lib')
+
+      waitsFor ->
+        Object.keys(manager.database).length < 4
+
+      runs ->
+        expect(Object.keys(manager.database).length).toEqual(0)
+
+    it "Removes the entries when the path is set to empty string", ->
+      runs ->
+        atom.config.set 'autocomplete-latex-cite.globalBibPath', ''
+
+      waitsFor ->
+        Object.keys(manager.database).length < 4
+
+      runs ->
+        expect(Object.keys(manager.database).length).toEqual(0)
