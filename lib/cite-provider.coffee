@@ -23,8 +23,6 @@ class CiteProvider
   constructor: ->
     @manager = new CiteManager()
     @manager.initialize()
-    #bibFile = path.join( (atom.config.get 'autocomplete-latex-cite.globalBibtexPath') ,'library.bib')
-    #@manager.addBibtexFile(bibFile)
 
   getSuggestions: ({editor, bufferPosition}) ->
     prefix = @getPrefix(editor, bufferPosition)
@@ -42,8 +40,11 @@ class CiteProvider
       text: result.id
       replacementPrefix: prefix
       type: result.type
-      descriptionMarkdown: result.fullcite
+      className: 'latex-cite'
+      descriptionMarkdown: result.markdownCite
+      descriptionMoreURL: result.url
       iconHTML: '<i class="icon-mortar-board"></i>'
+
 
   onDidInsertSuggestion: ({editor, triggerPosition, suggestion}) ->
 
