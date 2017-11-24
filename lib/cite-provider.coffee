@@ -36,14 +36,21 @@ class CiteProvider
       resolve(suggestions)
 
   suggestionForResult: (result, prefix) ->
+    iconClass = "icon-mortar-board"
+    if (result.class == 'article' || result.class == 'inproceedings' || result.class == "incollection")
+      iconClass = "icon-file-text"
+    else if (result.class == 'book' ||  result.class == 'inbook')
+      iconClass = "icon-repo"
+
+
     suggestion =
       text: result.id
       replacementPrefix: prefix
-      type: result.type
+      type: result.class
       className: 'latex-cite'
       descriptionMarkdown: result.markdownCite
       descriptionMoreURL: result.url
-      iconHTML: '<i class="icon-mortar-board"></i>'
+      iconHTML: "<i class=\"#{iconClass}\"></i>"
 
 
   onDidInsertSuggestion: ({editor, triggerPosition, suggestion}) ->

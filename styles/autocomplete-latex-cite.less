@@ -1,28 +1,50 @@
 @import "ui-variables";
 
-.make-type-icon(@type, @color) {
-   .icon.@{type} {
-      color: @color;
-         background: fadeout(@color, 80%);
-   }
+autocomplete-suggestion-list.select-list.popover-list {
+  ol.list-group {
+    li.latex-cite {
+        .word {
+          max-width: 40vw;
+          width: 40vw;
+        }
+    }
+  }
+
+  .suggestion-description {
+    p {
+      display: inline-block;
+      margin: 0 0 0;
+      line-height: inherit;
+    }
+  }
 }
 
 autocomplete-suggestion-list {
 
-  .make-type-icon(book, @syntax-color-attribute);
-  .make-type-icon(chapter, @syntax-color-keyword);
-  .make-type-icon(inproceding, @syntax-color-variable);
-
-  //@syntax-color-method
-  //@syntax-color-snippet
-  //@syntax-color-class
-  //@syntax-color-tag
+.make-type-icon(inproceedings, @syntax-color-snippet);
+.make-type-icon(article, @syntax-color-snippet);
+.make-type-icon(incollection, @syntax-color-snippet);
+.make-type-icon(book, @syntax-color-method);
+.make-type-icon(inbook, @syntax-color-method);
+.make-type-icon(techreport, @syntax-color-class);
+.make-type-icon(phdthesis, @syntax-color-keyword);
+//.make-type-icon(, @syntax-color-tag);
+//.make-type-icon(, @syntax-color-attribute);
 }
 
 
-.autocomplete-latex-cite {
-
-
-
-
+.make-type-icon(@type, @color) {
+  .icon.@{type} {
+    color: @color;
+    background: fadeout(@color, 80%)
+  }
+}
+.make-type-icon(@type, @color)
+  when (hsvvalue(@color) - hsvvalue(@overlay-background-color) > -20)
+  and (hsvvalue(@color) - hsvvalue(@overlay-background-color) < 20) {
+  .icon.@{type} {
+    @corrected-color: contrast(@overlay-background-color, darken(@color, 30%), lighten(@color, 30%));
+    color: @corrected-color;
+    background: fadeout(@corrected-color, 80%);
+  }
 }
