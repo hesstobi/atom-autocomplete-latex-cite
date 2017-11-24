@@ -18,6 +18,7 @@ class CiteProvider
     "citealt"
     "citealp"
     "citetext"
+    "textcite"
   ]
 
   constructor: ->
