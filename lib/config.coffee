@@ -1,5 +1,6 @@
 { execSync } = require 'child_process'
 path = require 'path'
+os = require 'os'
 
 texmfBibtexPath = undefined
 
@@ -11,9 +12,14 @@ getTexmfBibtexPath = ->
     try
       output = execSync('kpsewhich -var-value TEXMFHOME',
         { env: ENV, encoding: 'utf8'})
-      texmfBibtexPath = path.join(path.normalize(output.trim()),'bibtex','bib')
+      texmfBibtexPath = path.normalize(output.trim())
     catch
       texmfBibtexPath = ''
+
+    if texmfBibtexPath
+      texmfBibtexPath = path.join(texmfBibtexPath,'bibtex','bib')
+      if process.platform == 'darwin'
+        texmfBibtexPath = path.join(os.homedir(),texmfBibtexPath)
   return texmfBibtexPath
 
 module.exports =
