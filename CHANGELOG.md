@@ -1,3 +1,6 @@
+## 0.2.0 - 2017-11-28
+* improves package loading time
+
 ## 0.1.0 - 2017-11-24
 * searches for bibtex files in the project path and optional in a user defined global path
 * updates the entries in the database when a bibtex file changes
