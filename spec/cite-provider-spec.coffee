@@ -26,16 +26,19 @@ describe "Latex Cite Autocompletions", ->
 
 
   beforeEach ->
+
+    atom.packages.triggerActivationHook('language-latex:grammar-used')
+    atom.packages.triggerDeferredActivationHooks()
+    atom.project.setPaths([__dirname])
+
     waitsForPromise -> atom.packages.activatePackage('autocomplete-latex-cite')
+    waitsForPromise -> atom.workspace.open('test.tex')
 
     runs ->
       provider = atom.packages.getActivePackage('autocomplete-latex-cite').mainModule.provide()
-
-    atom.project.setPaths([__dirname])
-    waitsForPromise -> atom.workspace.open('test.tex')
-    waitsFor -> Object.keys(provider.manager.database).length > 0
-    runs ->
       editor = atom.workspace.getActiveTextEditor()
+    waitsFor -> Object.keys(provider.manager.database).length > 0
+
 
   it "returns no completions when not at the start of a tag", ->
     editor.setText('')

@@ -3,6 +3,7 @@
   "main": "./lib/main",
   "version": "0.1.0",
   "description": "Autocomplete+ Support for Bibtex References in Latex",
+  "activationHooks": ["language-latex:grammar-used"],
   "keywords": [],
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
