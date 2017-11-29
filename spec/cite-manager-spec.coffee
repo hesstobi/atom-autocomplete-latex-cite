@@ -79,9 +79,11 @@ describe "When the CiteManger gets initialized", ->
 
     it "show a warning", ->
       noti = atom.notifications.getNotifications()
-      expect(noti).toHaveLength 1
-      expect(noti[0].message).toEqual "Autocomple Latex Cite Warning"
+      expect(noti.length).toEqual 1
+      expect(noti[0].message).toEqual "Autocomplete Latex Cite Warning"
       expect(noti[0].type).toEqual "warning"
+      expect(noti[0].options.description).toContain "lib2.bib"
+      expect(noti[0].options.description).toContain "Token mismatch: match"
 
   describe "When the global Path is enabled", ->
     manager = null
