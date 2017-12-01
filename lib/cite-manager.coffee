@@ -58,6 +58,8 @@ class CiteManager
           @addBibtexFile(e.path)
         when "deleted"
           @removeBibtexFile(e.path)
+        when "renamed"
+          @addBibtexFile(e.path)
 
   initialize: ->
     # Add Bibfiles to the Database
