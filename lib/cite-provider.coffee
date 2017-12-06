@@ -3,23 +3,10 @@ path = require 'path'
 
 module.exports =
 class CiteProvider
-  selector: '.text.tex.latex'
-  disableForSelector: '.comment'
+  selector: '.meta.citation.latex'
   inclusionPriority: 2
   suggestionPriority: 3
-  excludeLowerPriority: false
-  commandList: [
-    "cite"
-    "citet"
-    "citep"
-    "citeautor"
-    "citeyear"
-    "citeyearpar"
-    "citealt"
-    "citealp"
-    "citetext"
-    "textcite"
-  ]
+  excludeLowerPriority: true
 
   constructor: ->
     @manager = new CiteManager()
@@ -60,16 +47,12 @@ class CiteProvider
     @manager = []
 
   getPrefix: (editor, bufferPosition) ->
-    cmdprefixes = @commandList.join '|'
 
     # Whatever your prefix regex might be
     regex = ///
-            \\(#{cmdprefixes}) #comand group
-            (\*)? #starred commands
-            (\[[\\\w-]*\])? # optional paramters
             {([\w-:]+)$ # machthing the prefix
             ///
     # Get the text for the line up to the triggered buffer position
     line = editor.getTextInRange([[bufferPosition.row, 0], bufferPosition])
     # Match the regex to the line, and return the match
-    line.match(regex)?[4] or ''
+    line.match(regex)?[1] or ''
