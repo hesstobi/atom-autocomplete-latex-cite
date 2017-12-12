@@ -1,3 +1,7 @@
+## 0.3.0 - 2017-12-12
+* use the grammar scope to trigger the auto completion
+* support of multiple cites
+
 ## 0.2.0 - 2017-11-28
 * improves package loading time
 
