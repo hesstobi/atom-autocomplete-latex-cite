@@ -57,3 +57,7 @@ describe "Latex Cite Autocompletions", ->
   it "has completions for prefix starting with the first letter", ->
     editor.setText('\\cite{Hess')
     checkSuggestion('7856203')
+
+  it "supports multiple arguments", ->
+    editor.setText('\\cite{7286496,Hess')
+    checkSuggestion('7856203')
