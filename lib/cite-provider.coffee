@@ -52,7 +52,7 @@ class CiteProvider
     regex = ///
             { # Start of the argument
             (?:[\w-:]+,\s?)* # allow multiple references
-            ([\w-:]+)$ # matching the prefix
+            ([\w-:\s]+)$ # matching the prefix
             ///
     # Get the text for the line up to the triggered buffer position
     line = editor.getTextInRange([[bufferPosition.row, 0], bufferPosition])
