@@ -1,3 +1,7 @@
+## 0.3.1 - 2018-01-02
+* support for language-latex2e
+* allow spaces in search prefix
+
 ## 0.3.0 - 2017-12-12
 * use the grammar scope to trigger the auto completion
 * support of multiple cites
