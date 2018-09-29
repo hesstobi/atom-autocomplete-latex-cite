@@ -1,6 +1,7 @@
-## master
+## 0.3.2 - 2018-09-29
 * skip ALIAS directive, thanks @bbbrumley
 * skip STRING directive, fix #7
+* minior fixes
 
 ## 0.3.1 - 2018-01-02
 * support for language-latex2e
