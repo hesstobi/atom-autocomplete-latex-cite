@@ -1,3 +1,6 @@
+## master
+* skip ALIAS directive, thanks @bbbrumley
+
 ## 0.3.1 - 2018-01-02
 * support for language-latex2e
 * allow spaces in search prefix
