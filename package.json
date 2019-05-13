@@ -28,6 +28,6 @@
     }
   },
   "devDependencies": {
-    "fs-extra": "^6.0.0"
+    "fs-extra": "^8.0.1"
   }
 }
