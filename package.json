@@ -11,13 +11,13 @@
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
-  "repository": "https://github.com/hesstobi/atom-autocomplete-latex-cite",
+  "repository": "https://github.com/mayhewsw/atom-autocomplete-latex-cite",
   "license": "MIT",
   "dependencies": {
     "citation-js": "^0.3.4",
     "fuse.js": "^3.2.0",
     "glob": "^7.1.2",
-    "latex-to-unicode-converter": "^0.5.0",
+    "latex-to-unicode": "^0.1.0",
     "promisify-node": "^0.5.0"
   },
   "providedServices": {
