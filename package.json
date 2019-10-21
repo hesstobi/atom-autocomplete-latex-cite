@@ -16,7 +16,7 @@
   "dependencies": {
     "citation-js": "^0.3.4",
     "fuse.js": "^3.2.0",
-    "glob": "^7.1.2",
+    "glob": "^7.1.5",
     "latex-to-unicode-converter": "^0.5.0",
     "promisify-node": "^0.5.0"
   },
