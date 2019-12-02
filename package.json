@@ -11,7 +11,7 @@
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
-  "repository": "https://github.com/mayhewsw/atom-autocomplete-latex-cite",
+  "repository": "https://github.com/hesstobi/atom-autocomplete-latex-cite",
   "license": "MIT",
   "dependencies": {
     "citation-js": "^0.3.4",
