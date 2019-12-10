@@ -33,3 +33,8 @@ module.exports =
     order: 1
     default: false
     description: 'Add the bibtex entries in the global files to the suggestions list.'
+  excludeNotesBibFiles:
+    type: 'boolean'
+    order: 3
+    default: false
+    description: 'Exlude the *Notes.bib files that are created during bibtex of main tex file'

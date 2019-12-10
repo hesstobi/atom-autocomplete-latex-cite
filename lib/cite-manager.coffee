@@ -43,6 +43,9 @@ class CiteManager
   handleWatcherEvents: (events) =>
     # Filter for bib files
     events = events.filter (e) -> /bib$/.test(e.path)
+    # if exclude Notes.bib files, filter all *Notes.bib files out
+    if atom.config.get('autocomplete-latex-cite.excludeNotesBibFiles')
+      events = events.filter (e) -> !/Notes\.bib/.test(e.path)
     # Filter multiple events for one file
     flags = {}
     events = events.reverse().filter (e) ->
@@ -113,7 +116,10 @@ class CiteManager
 
   removeGlobalBibFiles: () ->
     if @globalPathWatcher
-      files = glob.sync(path.join(@globalPathWatcher.watchedPath, '**/*.bib'))
+      if atom.config.get('autocomplete-latex-cite.excludeNotesBibFiles')
+        files = glob.sync(path.join(@globalPathWatcher.watchedPath, '**/*.bib'), {"ignore":[path.join(folder, '**/*Notes.bib')]})
+      else
+        files = glob.sync(path.join(@globalPathWatcher.watchedPath, '**/*.bib'))
       for file in files
         @removeBibtexFile(file)
       @globalPathWatcher.dispose()
@@ -121,7 +127,10 @@ class CiteManager
       @globalPathWatcher = undefined
 
   addFilesFromFolder: (folder) ->
-    files = glob.sync(path.join(folder, '**/*.bib'))
+    if atom.config.get('autocomplete-latex-cite.excludeNotesBibFiles')
+      files = glob.sync(path.join(folder, '**/*.bib'), {"ignore":[path.join(folder, '**/*Notes.bib')]})
+    else
+      files = glob.sync(path.join(folder, '**/*.bib'))
     promises = []
     for file in files
       promises.push(@addBibtexFile(file))
