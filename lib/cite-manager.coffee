@@ -45,7 +45,7 @@ class CiteManager
     events = events.filter (e) -> /bib$/.test(e.path)
     # if exclude Notes.bib files, filter all *Notes.bib files out
     if atom.config.get('autocomplete-latex-cite.excludeNotesBibFiles')
-      events = events.filter (e) -> !/Notes\.bib/.test(e.path)
+      events = events.filter (e) -> !/Notes\.bib$/.test(e.path)
     # Filter multiple events for one file
     flags = {}
     events = events.reverse().filter (e) ->
