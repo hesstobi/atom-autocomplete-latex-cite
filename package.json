@@ -1,7 +1,7 @@
 {
   "name": "autocomplete-latex-cite",
   "main": "./lib/main",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Autocomplete+ Support for Bibtex References in Latex",
   "activationHooks": [
     "language-latex:grammar-used",
