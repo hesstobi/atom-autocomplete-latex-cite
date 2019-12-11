@@ -1,3 +1,6 @@
+## 0.3.5 - 2019-12-11
+* skip CONTROL and FOOTNOTE directive
+
 ## 0.3.2 - 2018-09-29
 * skip ALIAS directive, thanks @bbbrumley
 * skip STRING directive, fix #7
