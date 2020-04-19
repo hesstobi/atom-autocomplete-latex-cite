@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "citation-js": "^0.4.0",
-    "fuse.js": "^3.2.0",
+    "fuse.js": "^5.2.1",
     "glob": "^7.1.2",
     "latex-to-unicode": "^0.1.0",
     "promisify-node": "^0.5.0"
