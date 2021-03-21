@@ -18,19 +18,19 @@ class CiteManager
     minMatchCharLength: 1,
     keys: [{
         "name": "title",
-        "weight": 0.3
+        "weight": (0.3/1.6)
     },
     {
         "name": "author.family",
-        "weight": 0.6
+        "weight": (0.6/1.6)
     },
     {
         "name": "author.given",
-        "weight": 0.6
+        "weight": (0.6/1.6)
     },
     {
         "name": "id",
-        "weight": 0.1
+        "weight": (0.1/1.6)
     }]
 
 
